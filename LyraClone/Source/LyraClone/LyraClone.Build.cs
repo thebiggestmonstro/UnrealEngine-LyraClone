@@ -17,6 +17,8 @@ public class LyraClone : ModuleRules
 			"EnhancedInput" 
 		});
 
+		PublicIncludePaths.AddRange(new string[] { "LyraClone" });
+
 		PrivateDependencyModuleNames.AddRange(new string[] 
 		{  
 		
