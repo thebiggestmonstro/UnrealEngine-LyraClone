@@ -7,6 +7,9 @@
 #include "Character/LyraCloneCharacter.h"
 #include "Player/LyraClonePlayerController.h"
 #include "Player/LyraClonePlayerState.h"
+#include "LyraCloneExperienceManagerComponent.h"
+#include "LyraCloneExperienceDefinition.h"
+#include "LyraCloneLogChannels.h"
 
 ALyraCloneGameModeBase::ALyraCloneGameModeBase()
 {
@@ -26,7 +29,47 @@ void ALyraCloneGameModeBase::InitGame(const FString& MapName, const FString& Opt
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ThisClass::HandleMatchAssignmentIfNotExpectingOne);
 }
 
+void ALyraCloneGameModeBase::InitGameState()
+{
+	Super::InitGameState();
+	// Experience 비동기 로딩을 위한 Delegate를 준비한다:
+	ULyraCloneExperienceManagerComponent* ExperienceManagerComponent = GameState->FindComponentByClass<ULyraCloneExperienceManagerComponent>();
+	check(ExperienceManagerComponent);
+
+	// OnExperienceLoaded 등록
+	ExperienceManagerComponent->CallOrRegister_OnExperienceLoaded(FOnLyraCloneExperienceLoaded::FDelegate::CreateUObject(this, &ThisClass::OnExperienceLoaded));
+}
+
+void ALyraCloneGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	// Experience가 로드되어있다면, Player에 대한 생성을 진행
+	if (IsExperienceLoaded())
+	{
+		Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+	}
+}
+
+APawn* ALyraCloneGameModeBase::SpawnDefaultPawnAtTransform_Implementation(AController* NewPlayer, const FTransform& SpawnTransform)
+{
+	UE_LOG(LogLyraClone, Log, TEXT("SpawnDefaultPawnAtTransform_Implementation is called"));
+	return Super::SpawnDefaultPawnAtTransform_Implementation(NewPlayer, SpawnTransform);
+}
+
 void ALyraCloneGameModeBase::HandleMatchAssignmentIfNotExpectingOne()
+{
+	
+}
+
+bool ALyraCloneGameModeBase::IsExperienceLoaded() const
+{
+	check(GameState);
+	ULyraCloneExperienceManagerComponent* ExperienceManagerComponent = GameState->FindComponentByClass<ULyraCloneExperienceManagerComponent>();
+	check(ExperienceManagerComponent);
+
+	return ExperienceManagerComponent->IsExperienceLoaded();
+}
+
+void ALyraCloneGameModeBase::OnExperienceLoaded(const ULyraCloneExperienceDefinition* CurrentExperience)
 {
 
 }

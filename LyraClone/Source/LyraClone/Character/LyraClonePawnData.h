@@ -16,4 +16,8 @@ class LYRACLONE_API ULyraClonePawnData : public UPrimaryDataAsset
 	
 public:
 	ULyraClonePawnData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/** 어떤 Pawn을 소환할 것인지를 결정하는 Pawn의 Class */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|Pawn")
+	TSubclassOf<APawn> PawnClass;
 };
