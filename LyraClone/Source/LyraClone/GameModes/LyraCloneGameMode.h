@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "LyraCloneGameModeBase.generated.h"
+#include "LyraCloneGameMode.generated.h"
 
 class ULyraCloneExperienceDefinition;
 
@@ -12,12 +12,12 @@ class ULyraCloneExperienceDefinition;
  * 
  */
 UCLASS()
-class LYRACLONE_API ALyraCloneGameModeBase : public AGameModeBase
+class LYRACLONE_API ALyraCloneGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
 public:
-	ALyraCloneGameModeBase();
+	ALyraCloneGameMode();
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void InitGameState() override;
@@ -32,6 +32,7 @@ public:
 	 * member methods
 	*/
 	void HandleMatchAssignmentIfNotExpectingOne();
+	void OnMatchAssignmentGiven(FPrimaryAssetId ExperienceId);
 	bool IsExperienceLoaded() const;
 	void OnExperienceLoaded(const ULyraCloneExperienceDefinition* CurrentExperience);
 };

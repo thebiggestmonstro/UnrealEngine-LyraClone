@@ -41,9 +41,14 @@ public:
 	 */
 	void CallOrRegister_OnExperienceLoaded(FOnLyraCloneExperienceLoaded::FDelegate&& Delegate);
 
+	void ServerSetCurrentExperience(FPrimaryAssetId ExperienceId);
+	void StartExperienceLoad();
+	void OnExperienceLoadComplete();
+	void OnExperienceFullLoadCompleted();
+
 public:
 	UPROPERTY()
-	TObjectPtr<ULyraCloneExperienceDefinition> CurrentExperience;
+	TObjectPtr<const ULyraCloneExperienceDefinition> CurrentExperience;
 
 	/** Experience의 로딩 상태를 모니터링 */
 	ELyraCloneExperienceLoadState LoadState = ELyraCloneExperienceLoadState::Unloaded;

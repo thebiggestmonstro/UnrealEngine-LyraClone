@@ -19,6 +19,7 @@ public class LyraClone : ModuleRules
 			"GameplayTags",
 			// Game Features
 			"ModularGameplay",
+			"GameFeatures",
 		});
 
 		PublicIncludePaths.AddRange(new string[] { "LyraClone" });
