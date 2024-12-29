@@ -10,6 +10,7 @@
 #include "LyraCloneExperienceManagerComponent.h"
 #include "LyraCloneExperienceDefinition.h"
 #include "LyraCloneLogChannels.h"
+#include "Character/LyraClonePawnData.h"
 
 ALyraCloneGameMode::ALyraCloneGameMode()
 {
@@ -38,6 +39,20 @@ void ALyraCloneGameMode::InitGameState()
 
 	// OnExperienceLoaded 등록
 	ExperienceManagerComponent->CallOrRegister_OnExperienceLoaded(FOnLyraCloneExperienceLoaded::FDelegate::CreateUObject(this, &ThisClass::OnExperienceLoaded));
+}
+
+UClass* ALyraCloneGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)
+{
+	// GetPawnDataForController를 활용하여, PawnData로부터 PawnClass를 유도하자
+	if (const ULyraClonePawnData* PawnData = GetPawnDataForController(InController))
+	{
+		if (PawnData->PawnClass)
+		{
+			return PawnData->PawnClass;
+		}
+	}
+
+	return Super::GetDefaultPawnClassForController_Implementation(InController);
 }
 
 void ALyraCloneGameMode::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
@@ -101,5 +116,54 @@ bool ALyraCloneGameMode::IsExperienceLoaded() const
 
 void ALyraCloneGameMode::OnExperienceLoaded(const ULyraCloneExperienceDefinition* CurrentExperience)
 {
+	// PlayerController를 순회하며
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		APlayerController* PC = Cast<APlayerController>(*Iterator);
 
+		// PlayerController가 Pawn을 Possess하지 않았다면, RestartPlayer를 통해 Pawn을 다시 Spawn한다
+		// - 한번 OnPossess를 보도록 하자:
+		if (PC && PC->GetPawn() == nullptr)
+		{
+			if (PlayerCanRestart(PC))
+			{
+				RestartPlayer(PC);
+			}
+		}
+	}
+}
+
+const ULyraClonePawnData* ALyraCloneGameMode::GetPawnDataForController(const AController* InController) const
+{
+	// 게임 도중에 PawnData가 오버라이드 되었을 경우, PawnData는 PlayerState에서 가져오게 됨
+	if (InController)
+	{
+		if (const ALyraClonePlayerState* LyraClonePS = InController->GetPlayerState<ALyraClonePlayerState>())
+		{
+			// GetPawnData 구현
+			if (const ULyraClonePawnData* PawnData = LyraClonePS->GetPawnData<ULyraClonePawnData>())
+			{
+				return PawnData;
+			}
+		}
+	}
+
+	// fall back to the default for the current experience
+	// 아직 PlayerState에 PawnData가 설정되어 있지 않은 경우, ExperienceManagerComponent의 CurrentExperience로부터 가져와서 설정
+	check(GameState);
+	ULyraCloneExperienceManagerComponent* ExperienceManagerComponent = GameState->FindComponentByClass<ULyraCloneExperienceManagerComponent>();
+	check(ExperienceManagerComponent);
+
+	if (ExperienceManagerComponent->IsExperienceLoaded())
+	{
+		// GetExperienceChecked 구현
+		const ULyraCloneExperienceDefinition* Experience = ExperienceManagerComponent->GetCurrentExperienceChecked();
+		if (Experience->DefaultPawnData)
+		{
+			return Experience->DefaultPawnData;
+		}
+	}
+
+	// 어떠한 케이스에도 핸들링 안되었으면 nullptr
+	return nullptr;
 }

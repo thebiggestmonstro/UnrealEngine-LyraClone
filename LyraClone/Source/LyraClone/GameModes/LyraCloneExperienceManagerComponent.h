@@ -45,6 +45,7 @@ public:
 	void StartExperienceLoad();
 	void OnExperienceLoadComplete();
 	void OnExperienceFullLoadCompleted();
+	const ULyraCloneExperienceDefinition* GetCurrentExperienceChecked() const;
 
 public:
 	UPROPERTY()
