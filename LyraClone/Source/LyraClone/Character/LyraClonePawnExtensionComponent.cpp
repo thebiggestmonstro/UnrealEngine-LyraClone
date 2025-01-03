@@ -6,6 +6,9 @@
 #include "Components/GameFrameworkComponentManager.h"
 #include "LyraCloneGameplayTags.h"
 
+/** feature name을 component 단위니깐 component를 빼고 pawn extension만 넣은 것을 확인할 수 있다 */
+const FName ULyraClonePawnExtensionComponent::NAME_ActorFeatureName("PawnExtension");
+
 ULyraClonePawnExtensionComponent::ULyraClonePawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
