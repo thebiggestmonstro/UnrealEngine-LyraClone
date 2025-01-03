@@ -3,6 +3,7 @@
 
 #include "LyraCloneAssetManager.h"
 #include "LyraClone/LyraCloneLogChannels.h"
+#include "LyraCloneGameplayTags.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneAssetManager)
 
@@ -18,6 +19,7 @@ void ULyraCloneAssetManager::StartInitialLoading()
 	// 오버라이드할 경우, Super의 호출은 꼭 까먹지 말자
 	Super::StartInitialLoading();
 
+	FLyraCloneGameplayTags::InitializeNativeTags();
 }
 UE_ENABLE_OPTIMIZATION_SHIP
 
