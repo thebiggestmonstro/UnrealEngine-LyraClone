@@ -5,8 +5,9 @@
 #include "LyraCloneLogChannels.h"
 #include "LyraClonePawnExtensionComponent.h"
 #include "LyraCloneGameplayTags.h"
-#include <Player/LyraClonePlayerState.h>
+#include "Player/LyraClonePlayerState.h"
 #include "Components/GameFrameworkComponentManager.h"
+#include "LyraClonePawnData.h"
 
 /** FeatureName 정의: static member variable 초기화 */
 const FName ULyraCloneHeroComponent::NAME_ActorFeatureName("Hero");
@@ -119,7 +120,27 @@ bool ULyraCloneHeroComponent::CanChangeInitState(UGameFrameworkComponentManager*
 
 void ULyraCloneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState)
 {
-	IGameFrameworkInitStateInterface::HandleChangeInitState(Manager, CurrentState, DesiredState);
+	const FLyraCloneGameplayTags& InitTags = FLyraCloneGameplayTags::Get();
+
+	// DataAvailable -> DataInitialized 단계
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		APawn* Pawn = GetPawn<APawn>();
+		ALyraClonePlayerState* LyraClonePS = GetPlayerState<ALyraClonePlayerState>();
+		if (!ensure(Pawn && LyraClonePS))
+		{
+			return;
+		}
+
+		// Input과 Camera에 대한 핸들링...(TODO)
+
+		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
+		const ULyraClonePawnData* PawnData = nullptr;
+		if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>();
+		}
+	}
 }
 
 void ULyraCloneHeroComponent::CheckDefaultInitialization()

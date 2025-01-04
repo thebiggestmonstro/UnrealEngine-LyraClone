@@ -28,7 +28,8 @@ public:
 	static ULyraClonePawnExtensionComponent* FindPawnExtensionComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<ULyraClonePawnExtensionComponent>() : nullptr); }
 	template <class T>
 	const T* GetPawnData() const { return Cast<T>(PawnData); }
-	void SetPawnData(const ULyraClonePawnData* InPawnData);
+	void SetPawnData(const ULyraClonePawnData* InPawnData);	
+	void SetupPlayerInputComponent();
 
 	/**
 	 * UPawnComponent interfaces

@@ -35,6 +35,12 @@ void ULyraClonePawnExtensionComponent::SetPawnData(const ULyraClonePawnData* InP
 	PawnData = InPawnData;
 }
 
+void ULyraClonePawnExtensionComponent::SetupPlayerInputComponent()
+{
+	// ForceUpdate로 다시 InitState 상태 변환 시작 (연결 고리)
+	CheckDefaultInitialization();
+}
+
 UE_DISABLE_OPTIMIZATION_SHIP
 void ULyraClonePawnExtensionComponent::OnRegister()
 {
