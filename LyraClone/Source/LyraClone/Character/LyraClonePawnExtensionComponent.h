@@ -6,6 +6,8 @@
 #include "Components/GameFrameworkInitStateInterface.h"
 #include "LyraClonePawnExtensionComponent.generated.h"
 
+class ULyraClonePawnData;
+
 /**
  * 초기화 전반을 조정하는 컴포넌트
  */
@@ -21,6 +23,14 @@ public:
 	static const FName NAME_ActorFeatureName;
 
 	/**
+	 * member methods
+	 */
+	static ULyraClonePawnExtensionComponent* FindPawnExtensionComponent(const AActor* Actor) { return (Actor ? Actor->FindComponentByClass<ULyraClonePawnExtensionComponent>() : nullptr); }
+	template <class T>
+	const T* GetPawnData() const { return Cast<T>(PawnData); }
+	void SetPawnData(const ULyraClonePawnData* InPawnData);
+
+	/**
 	 * UPawnComponent interfaces
 	 */
 	virtual void OnRegister() final;
@@ -34,4 +44,10 @@ public:
 	virtual void OnActorInitStateChanged(const FActorInitStateChangedParams& Params) final;
 	virtual bool CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const final;
 	virtual void CheckDefaultInitialization() final;
+
+	/**
+	* Pawn을 생성한 데이터를 캐싱
+	*/
+	UPROPERTY(EditInstanceOnly, Category = "LyraClone|Pawn")
+	TObjectPtr<const ULyraClonePawnData> PawnData;
 };

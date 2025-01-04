@@ -17,6 +17,24 @@ ULyraClonePawnExtensionComponent::ULyraClonePawnExtensionComponent(const FObject
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+void ULyraClonePawnExtensionComponent::SetPawnData(const ULyraClonePawnData* InPawnData)
+{
+	// Pawn에 대해 Authority가 없을 경우, SetPawnData는 진행하지 않음
+	APawn* Pawn = GetPawnChecked<APawn>();
+	if (Pawn->GetLocalRole() != ROLE_Authority)
+	{
+		return;
+	}
+
+	if (PawnData)
+	{
+		return;
+	}
+
+	// PawnData 업데이트
+	PawnData = InPawnData;
+}
+
 UE_DISABLE_OPTIMIZATION_SHIP
 void ULyraClonePawnExtensionComponent::OnRegister()
 {
@@ -88,7 +106,63 @@ void ULyraClonePawnExtensionComponent::OnActorInitStateChanged(const FActorInitS
 
 bool ULyraClonePawnExtensionComponent::CanChangeInitState(UGameFrameworkComponentManager* Manager, FGameplayTag CurrentState, FGameplayTag DesiredState) const
 {
-	return IGameFrameworkInitStateInterface::CanChangeInitState(Manager, CurrentState, DesiredState);
+	check(Manager);
+
+	APawn* Pawn = GetPawn<APawn>();
+	const FLyraCloneGameplayTags& InitTags = FLyraCloneGameplayTags::Get();
+
+	// InitState_Spawned 초기화
+	// Onwer(=Pawn)이 잘 스폰되어 있으면 true
+	if (!CurrentState.IsValid() && DesiredState == InitTags.InitState_Spawned)
+	{
+		// Pawn이 잘 세팅만 되어있으면 바로 Spawned로 넘어감!
+		if (Pawn)
+		{
+			return true;
+		}
+	}
+
+	// StateChain에서 Spanwed의 다음 단계인 DataAvailable
+	// Spawned -> DataAvailable
+	if (CurrentState == InitTags.InitState_Spawned && DesiredState == InitTags.InitState_DataAvailable)
+	{
+		// 아마 PawnData를 누군가 설정하는 모양이다
+		if (!PawnData)
+		{
+			return false;
+		}
+
+		// LocallyControlled인 Pawn이 Controller가 없으면 에러!
+		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
+		if (bIsLocallyControlled)
+		{
+			if (!GetController<AController>())
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// StateChain에서 DataAvailable의 다음 단계인 DataInitialized
+	// DataAvailable -> DataInitialized
+	if (CurrentState == InitTags.InitState_DataAvailable && DesiredState == InitTags.InitState_DataInitialized)
+	{
+		// Actor에 바인드된 모든 Feature들이 DataAvailable 상태일 때, DataInitialized로 넘어감:
+		// - HaveAllFeaturesReachedInitState 확인
+		return Manager->HaveAllFeaturesReachedInitState(Pawn, InitTags.InitState_DataAvailable);
+	}
+
+	// StateChain에서 DataInitialized의 다음 단계인 GameplayReady
+	// DataInitialized -> GameplayReady
+	if (CurrentState == InitTags.InitState_DataInitialized && DesiredState == InitTags.InitState_GameplayReady)
+	{
+		return true;
+	}
+
+	// 위의 선형적인(linear) transition이 아니면 false!
+	return false;
 }
 
 void ULyraClonePawnExtensionComponent::CheckDefaultInitialization()
