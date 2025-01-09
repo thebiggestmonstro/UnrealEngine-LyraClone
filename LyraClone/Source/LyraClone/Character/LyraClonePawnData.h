@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Camera/LyraCloneCameraMode.h"
 #include "LyraClonePawnData.generated.h"
 
 /**
@@ -20,4 +21,8 @@ public:
 	/** 어떤 Pawn을 소환할 것인지를 결정하는 Pawn의 Class */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|Pawn")
 	TSubclassOf<APawn> PawnClass;
+
+	/** Camera Mode */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hak|Camera")
+	TSubclassOf<ULyraCloneCameraMode> DefaultCameraMode;
 };

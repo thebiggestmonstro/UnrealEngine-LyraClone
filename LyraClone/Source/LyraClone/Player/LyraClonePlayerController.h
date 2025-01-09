@@ -14,4 +14,6 @@ class LYRACLONE_API ALyraClonePlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	ALyraClonePlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 };

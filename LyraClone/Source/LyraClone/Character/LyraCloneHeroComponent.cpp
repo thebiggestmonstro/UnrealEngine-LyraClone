@@ -8,6 +8,8 @@
 #include "Player/LyraClonePlayerState.h"
 #include "Components/GameFrameworkComponentManager.h"
 #include "LyraClonePawnData.h"
+#include "Camera/LyraCloneCameraMode.h"
+#include "Camera/LyraCloneCameraComponent.h"
 
 /** FeatureName 정의: static member variable 초기화 */
 const FName ULyraCloneHeroComponent::NAME_ActorFeatureName("Hero");
@@ -132,13 +134,21 @@ void ULyraCloneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManag
 			return;
 		}
 
-		// Input과 Camera에 대한 핸들링...(TODO)
-
+		// Input에 대한 핸들링...(TODO)
 		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		const ULyraClonePawnData* PawnData = nullptr;
 		if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 		{
 			PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>();
+		}
+
+		if (bIsLocallyControlled && PawnData)
+		{
+			// 현재 LyraCloneCharacter에 Attach된 CameraComponent를 찾음
+			if (ULyraCloneCameraComponent* CameraComponent = ULyraCloneCameraComponent::FindCameraComponent(Pawn))
+			{
+				CameraComponent->DetermineCameraModeDelegate.BindUObject(this, &ThisClass::DetermineCameraMode);
+			}
 		}
 	}
 }
@@ -152,3 +162,25 @@ void ULyraCloneHeroComponent::CheckDefaultInitialization()
 	static const TArray<FGameplayTag> StateChain = { InitTags.InitState_Spawned, InitTags.InitState_DataAvailable, InitTags.InitState_DataInitialized, InitTags.InitState_GameplayReady };
 	ContinueInitStateChain(StateChain);
 }
+
+UE_DISABLE_OPTIMIZATION_SHIP
+TSubclassOf<ULyraCloneCameraMode> ULyraCloneHeroComponent::DetermineCameraMode() const
+{
+	const APawn* Pawn = GetPawn<APawn>();
+	if (!Pawn)
+	{
+		return nullptr;
+	}
+
+	// PawnExtensionComponent를 가져와서 캐싱된 PawnData를 가져와 CameraMode를 리턴 
+	if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		if (const ULyraClonePawnData* PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>())
+		{
+			return PawnData->DefaultCameraMode;
+		}
+	}
+
+	return nullptr;
+}
+UE_ENABLE_OPTIMIZATION_SHIP

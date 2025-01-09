@@ -3,6 +3,7 @@
 
 #include "Character/LyraCloneCharacter.h"
 #include "LyraClonePawnExtensionComponent.h"
+#include "Camera/LyraCloneCameraComponent.h"
 
 // Sets default values
 ALyraCloneCharacter::ALyraCloneCharacter()
@@ -11,6 +12,12 @@ ALyraCloneCharacter::ALyraCloneCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	// PawnExtComponent 생성
 	PawnExtComponent = CreateDefaultSubobject<ULyraClonePawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	
+	// CameraComponent 생성
+	{
+		CameraComponent = CreateDefaultSubobject<ULyraCloneCameraComponent>(TEXT("CameraComponent"));
+		CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
+	}
 }
 
 // Called when the game starts or when spawned
