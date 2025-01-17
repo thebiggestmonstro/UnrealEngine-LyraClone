@@ -50,6 +50,9 @@ ULyraCloneCameraMode::ULyraCloneCameraMode(const FObjectInitializer& ObjectIniti
 	BlendTime = 0.0f;
 	BlendAlpha = 1.0f;
 	BlendWeight = 1.0f;
+
+	BlendFunction = ELyraCloneCameraModeBlendFunction::EaseOut;
+	BlendExponent = 4.0f;
 }
 
 ULyraCloneCameraComponent* ULyraCloneCameraMode::GetLyraCloneCameraComponent() const
@@ -103,11 +106,6 @@ void ULyraCloneCameraMode::UpdateCameraMode(float DeltaTime)
 	UpdateBlending(DeltaTime);
 }
 
-void ULyraCloneCameraMode::UpdateBlending(float DeltaTime)
-{
-	
-}
-
 void ULyraCloneCameraMode::UpdateView(float DeltaTime)
 {
 	// CameraMode를 가지고 있는 CameraComponent의 Owner인 Character(Pawn)을 활용하여, PivotLocation/Rotation을 반환함
@@ -126,6 +124,43 @@ void ULyraCloneCameraMode::UpdateView(float DeltaTime)
 	View.FieldOfView = FieldOfView;
 
 	// 정리하면, Character의 Location과 ControlRotation을 활용하여, View를 업데이트함
+}
+
+void ULyraCloneCameraMode::UpdateBlending(float DeltaTime)
+{
+	// BlendAlpha를 DeltaTime을 통해 계산
+	if (BlendTime > 0.f)
+	{
+		// BlendTime은 Blending 과정 총 시간(초)
+		// - BlendAlpha는 0 -> 1로 변화하는 과정:
+		// - DeltaTime을 활용하여, BlendTime을 1로 볼 경우, 진행 정도를 누적
+		BlendAlpha += (DeltaTime / BlendTime);
+	}
+	else
+	{
+		BlendAlpha = 1.0f;
+	}
+
+	// BlendWeight를 [0,1]를 BlendFunction에 맞게 재매핑
+	const float Exponent = (BlendExponent > 0.0f) ? BlendExponent : 1.0f;
+	switch (BlendFunction)
+	{
+	case ELyraCloneCameraModeBlendFunction::Linear:
+		BlendWeight = BlendAlpha;
+		break;
+	case ELyraCloneCameraModeBlendFunction::EaseIn:
+		BlendWeight = FMath::InterpEaseIn(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	case ELyraCloneCameraModeBlendFunction::EaseOut:
+		BlendWeight = FMath::InterpEaseOut(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	case ELyraCloneCameraModeBlendFunction::EaseInOut:
+		BlendWeight = FMath::InterpEaseInOut(0.0f, 1.0f, BlendAlpha, Exponent);
+		break;
+	default:
+		checkf(false, TEXT("UpdateBlending: Invalid BlendFunction [%d]\n"), (uint8)BlendFunction);
+		break;
+	}
 }
 
 ULyraCloneCameraModeStack::ULyraCloneCameraModeStack(const FObjectInitializer& ObjectInitializer)
