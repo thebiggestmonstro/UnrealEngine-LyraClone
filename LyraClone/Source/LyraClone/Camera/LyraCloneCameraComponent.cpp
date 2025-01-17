@@ -26,6 +26,11 @@ void ULyraCloneCameraComponent::GetCameraView(float deltaTime, FMinimalViewInfo&
 	check(CameraModeStack);
 
 	UpdateCameraModes();
+
+	// EvaluateStack은 CameraModeStack에 있는 CameraMode를 업데이트(+블랜딩)하고 CameraModeStack을 Bottom-Top까지 업데이트된 CameraMode들을 Lerp를 진행해준다.
+	// - 이에 대한 결과는 CameraModeView에 캐싱된다
+	FLyraCloneCameraModeView CameraModeView;
+	CameraModeStack->EvaluateStack(deltaTime, CameraModeView);
 }
 
 void ULyraCloneCameraComponent::UpdateCameraModes()
@@ -38,7 +43,7 @@ void ULyraCloneCameraComponent::UpdateCameraModes()
 	{
 		if (TSubclassOf<ULyraCloneCameraMode> CameraMode = DetermineCameraModeDelegate.Execute())
 		{
-			// CameraModeStack->PushCameraMode(CameraMode);
+			CameraModeStack->PushCameraMode(CameraMode);
 		}
 	}
 }
