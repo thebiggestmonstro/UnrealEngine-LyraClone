@@ -3,10 +3,3 @@
 
 #include "Input/LyraCloneMappableConfigPair.h"
 
-LyraCloneMappableConfigPair::LyraCloneMappableConfigPair()
-{
-}
-
-LyraCloneMappableConfigPair::~LyraCloneMappableConfigPair()
-{
-}

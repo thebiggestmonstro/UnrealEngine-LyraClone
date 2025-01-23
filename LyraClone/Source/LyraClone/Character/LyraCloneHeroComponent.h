@@ -8,7 +8,7 @@
 #include "LyraCloneHeroComponent.generated.h"
 
 class ULyraCloneCameraMode;
-class FLyraCloneMappableConfigPair;
+struct FLyraCloneMappableConfigPair;
 
 /**
  * component that sets up input and camera handling for player controlled pawns (or bots that simulate players)

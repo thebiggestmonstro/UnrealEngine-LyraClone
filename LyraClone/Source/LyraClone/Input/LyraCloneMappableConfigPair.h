@@ -1,19 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include "CoreMinimal.h"
+#include "LyraCloneMappableConfigPair.generated.h"
 
+/** forward declaration */
 class UPlayerMappableInputConfig;
 
-/**
- * 
- */
-class LYRACLONE_API LyraCloneMappableConfigPair
+USTRUCT()
+struct FLyraCloneMappableConfigPair
 {
+	GENERATED_BODY()
+	
 public:
-public:
-	LyraCloneMappableConfigPair() = default;
+	FLyraCloneMappableConfigPair() = default;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UPlayerMappableInputConfig> Config;
