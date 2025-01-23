@@ -8,6 +8,7 @@
 #include "LyraCloneHeroComponent.generated.h"
 
 class ULyraCloneCameraMode;
+class FLyraCloneMappableConfigPair;
 
 /**
  * component that sets up input and camera handling for player controlled pawns (or bots that simulate players)
@@ -46,4 +47,10 @@ public:
 	 * member methods
 	 */
 	TSubclassOf<ULyraCloneCameraMode> DetermineCameraMode() const;
+
+	/**
+	 * member variables
+	 */
+	UPROPERTY(EditAnywhere)
+	TArray<FLyraCloneMappableConfigPair> DefaultInputConfigs;
 };
