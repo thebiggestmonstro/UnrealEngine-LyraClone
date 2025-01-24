@@ -9,6 +9,8 @@
 
 class ULyraCloneCameraMode;
 struct FLyraCloneMappableConfigPair;
+struct FLyraCloneMappableConfigPair;
+struct FInputActionValue;
 
 /**
  * component that sets up input and camera handling for player controlled pawns (or bots that simulate players)
@@ -47,6 +49,10 @@ public:
 	 * member methods
 	 */
 	TSubclassOf<ULyraCloneCameraMode> DetermineCameraMode() const;
+	void InitializePlayerInput(UInputComponent* PlayerInputComponent);
+
+	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_LookMouse(const FInputActionValue& InputActionValue);
 
 	/**
 	 * member variables
