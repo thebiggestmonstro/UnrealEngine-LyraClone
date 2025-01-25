@@ -16,7 +16,8 @@ USTRUCT(BlueprintType)
 struct FLyraCloneInputAction
 {
 	GENERATED_BODY()
-	public:
+	
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UInputAction> InputAction = nullptr;
 

@@ -24,10 +24,10 @@ public:
 	TSubclassOf<APawn> PawnClass;
 
 	/** Camera Mode */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hak|Camera")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|Camera")
 	TSubclassOf<ULyraCloneCameraMode> DefaultCameraMode;
 
 	/** input configuration used by player controlled pawns to create input mappings and bind input actions */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hak|InputConfig")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|InputConfig")
 	TObjectPtr<ULyraCloneInputConfig> InputConfig;
 };
