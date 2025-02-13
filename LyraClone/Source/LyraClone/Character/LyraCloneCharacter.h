@@ -3,18 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "ModularCharacter.h"
 #include "LyraCloneCharacter.generated.h"
 
 class ULyraClonePawnExtensionComponent;
 class ULyraCloneCameraComponent;
 
 UCLASS()
-class LYRACLONE_API ALyraCloneCharacter : public ACharacter
+class LYRACLONE_API ALyraCloneCharacter : public AModularCharacter
 {
 	GENERATED_BODY()
 
-public:
+	public:
 	// Sets default values for this character's properties
 	ALyraCloneCharacter();
 
@@ -22,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
