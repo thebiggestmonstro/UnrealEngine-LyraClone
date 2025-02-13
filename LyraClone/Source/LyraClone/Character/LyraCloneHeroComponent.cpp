@@ -21,6 +21,9 @@
 /** FeatureName 정의: static member variable 초기화 */
 const FName ULyraCloneHeroComponent::NAME_ActorFeatureName("Hero");
 
+/** InputConfig의 GameFeatureAction 활성화 ExtensioEvent 이름 */
+const FName ULyraCloneHeroComponent::NAME_BindInputsNow("BindInputsNow");
+
 ULyraCloneHeroComponent::ULyraCloneHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -258,6 +261,9 @@ void ULyraCloneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInput
 			}
 		}
 	}
+
+	// GameFeatureAction_AddInputConfig의 HandlePawnExtension 콜백 함수 전달
+	UGameFrameworkComponentManager::SendGameFrameworkComponentExtensionEvent(const_cast<APawn*>(Pawn), NAME_BindInputsNow);
 }
 
 void ULyraCloneHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
