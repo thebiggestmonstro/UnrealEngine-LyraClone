@@ -15,6 +15,7 @@ enum class ELyraCloneExperienceLoadState
 	Unloaded,
 	Loading,
 	LoadingGameFeatures,
+	ExecutingActions,
 	Loaded,
 	Deactivating,
 };
