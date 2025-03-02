@@ -3,3 +3,8 @@
 
 #include "Equipment/LyraCloneQuickBarComponent.h"
 
+ULyraCloneQuickBarComponent::ULyraCloneQuickBarComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+
+}

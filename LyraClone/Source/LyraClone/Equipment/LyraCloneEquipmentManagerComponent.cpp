@@ -3,3 +3,9 @@
 
 #include "Equipment/LyraCloneEquipmentManagerComponent.h"
 
+ULyraCloneEquipmentManagerComponent::ULyraCloneEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	, EquipmentList(this)
+{
+	
+}

@@ -3,3 +3,8 @@
 
 #include "Equipment/LyraCloneEquipmentInstance.h"
 
+ULyraCloneEquipmentInstance::ULyraCloneEquipmentInstance(const FObjectInitializer& ObjectInitializer)
+	:  Super(ObjectInitializer)
+{
+
+}

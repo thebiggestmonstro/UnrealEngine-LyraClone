@@ -2,4 +2,11 @@
 
 
 #include "Equipment/LyraCloneEquipmentDefinition.h"
+#include "LyracloneEquipmentInstance.h"
 
+ULyraCloneEquipmentDefinition::ULyraCloneEquipmentDefinition(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	// 기본값으로, LyraCloneEquipmentInstance로 설정
+	InstanceType = ULyraCloneEquipmentInstance::StaticClass();
+}
