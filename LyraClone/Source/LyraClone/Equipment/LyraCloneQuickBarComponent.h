@@ -25,6 +25,14 @@ class LYRACLONE_API ULyraCloneQuickBarComponent : public UControllerComponent
 public:
 	ULyraCloneQuickBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/**
+	* ControllerComponent interface
+	*/
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemToSlot(int32 SlotIndex, ULyraCloneInventoryItemInstance* Item);
+
 	/** HUD QuickBar Slot 갯수 */
 	UPROPERTY()
 	int32 NumSlots = 3;

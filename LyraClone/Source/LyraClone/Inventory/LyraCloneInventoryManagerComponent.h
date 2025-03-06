@@ -29,6 +29,8 @@ struct FLyraCloneInventoryList
 	FLyraCloneInventoryList(UActorComponent* InOwnerComponent = nullptr) : OwnerComponent(InOwnerComponent)
 	{}
 
+	ULyraCloneInventoryItemInstance* AddEntry(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef);
+
 	UPROPERTY()
 	TArray<FLyraCloneInventoryEntry> Entries;
 
@@ -47,6 +49,10 @@ class LYRACLONE_API ULyraCloneInventoryManagerComponent : public UActorComponent
 
 public:	
 	ULyraCloneInventoryManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/** InventoryItemDefinition을 통해, InventoryList에 추가하여 관리하며, InventoryItemInstance를 반환한다 */
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	ULyraCloneInventoryItemInstance* AddItemDefinition(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef);
 
 	UPROPERTY()
 	FLyraCloneInventoryList InventoryList;

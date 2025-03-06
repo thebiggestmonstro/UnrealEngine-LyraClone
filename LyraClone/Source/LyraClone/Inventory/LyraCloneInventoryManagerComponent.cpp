@@ -2,6 +2,25 @@
 
 
 #include "Inventory/LyraCloneInventoryManagerComponent.h"
+#include "LyraCloneInventoryItemInstance.h"
+#include "LyraCloneItemDefinition.h"
+
+ULyraCloneInventoryItemInstance* FLyraCloneInventoryList::AddEntry(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef)
+{
+	ULyraCloneInventoryItemInstance* Result = nullptr;
+	check(ItemDef);
+	check(OwnerComponent);
+
+	AActor* OwningActor = OwnerComponent->GetOwner();
+	check(OwningActor->HasAuthority());
+
+	FLyraCloneInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
+	NewEntry.Instance = NewObject<ULyraCloneInventoryItemInstance>(OwningActor);
+	NewEntry.Instance->ItemDef = ItemDef;
+
+	Result = NewEntry.Instance;
+	return Result;
+}
 
 ULyraCloneInventoryManagerComponent::ULyraCloneInventoryManagerComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -9,3 +28,14 @@ ULyraCloneInventoryManagerComponent::ULyraCloneInventoryManagerComponent(const F
 {
 
 }
+
+ULyraCloneInventoryItemInstance* ULyraCloneInventoryManagerComponent::AddItemDefinition(TSubclassOf<ULyraCloneInventoryItemDefinition> ItemDef)
+{
+	ULyraCloneInventoryItemInstance* Result = nullptr;
+	if (ItemDef)
+	{
+		Result = InventoryList.AddEntry(ItemDef);
+	}
+	return Result;
+}
+
