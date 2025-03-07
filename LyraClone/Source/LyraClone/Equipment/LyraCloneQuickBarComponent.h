@@ -8,6 +8,7 @@
 
 class ULyraCloneInventoryItemInstance;
 class ULyraCloneEquipmentInstance;
+class ULyraCloneEquipmentManagerComponent;
 
 /**
  * HUD의 QuckBar를 생각하면 된다:
@@ -26,12 +27,22 @@ public:
 	ULyraCloneQuickBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	/**
+	* member methods
+	*/
+	ULyraCloneEquipmentManagerComponent* FindEquipmentManager() const;
+	void UnequipItemInSlot();
+	void EquipItemInSlot();
+
+	/**
 	* ControllerComponent interface
 	*/
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemToSlot(int32 SlotIndex, ULyraCloneInventoryItemInstance* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "LyraClone")
+	void SetActiveSlotIndex(int32 NewIndex);
 
 	/** HUD QuickBar Slot 갯수 */
 	UPROPERTY()

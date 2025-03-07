@@ -37,6 +37,9 @@ struct FLyraCloneEquipmentList
 		: OwnerComponent(InOwnerComponent)
 	{}
 
+	ULyraCloneEquipmentInstance* AddEntry(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition);
+	void RemoveEntry(ULyraCloneEquipmentInstance* Instance);
+
 	/** 장착물에 대한 관리 리스트 */
 	UPROPERTY()
 	TArray<FLyraCloneAppliedEquipmentEntry> Entries;
@@ -55,6 +58,9 @@ class LYRACLONE_API ULyraCloneEquipmentManagerComponent : public UPawnComponent
 	
 public:
 	ULyraCloneEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	ULyraCloneEquipmentInstance* EquipItem(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition);
+	void UnequipItem(ULyraCloneEquipmentInstance* ItemInstance);
 
 	UPROPERTY()
 	FLyraCloneEquipmentList EquipmentList;

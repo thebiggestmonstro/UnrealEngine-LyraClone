@@ -6,6 +6,8 @@
 #include "UObject/NoExportTypes.h"
 #include "LyraCloneItemDefinition.generated.h"
 
+class ULyraCloneInventoryItemFragment;
+
 /**
  * Inventory에 대한 Fragment은 확 와닫지 않을 수 있다:
  * - Lyra에서 사용하는 예시를 통해 이해해보자:
@@ -43,6 +45,8 @@ class LYRACLONE_API ULyraCloneInventoryItemDefinition : public UObject
 	
 public:
 	ULyraCloneInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	const ULyraCloneInventoryItemFragment* FindFragmentByClass(TSubclassOf<ULyraCloneInventoryItemFragment> FragmentClass) const;
 
 	/** Inventory Item 정의(메타) 이름 **/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display)
