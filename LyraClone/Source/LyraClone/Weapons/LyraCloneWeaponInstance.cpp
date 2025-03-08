@@ -8,3 +8,9 @@ ULyraCloneWeaponInstance::ULyraCloneWeaponInstance(const FObjectInitializer& Obj
 {
 
 }
+
+TSubclassOf<UAnimInstance> ULyraCloneWeaponInstance::PickBestAnimLayer(bool bEquipped, const FGameplayTagContainer& CosmeticTags) const
+{
+	const FLyraCloneAnimLayerSelectionSet& SetToQuery = (bEquipped ? EquippedAnimSet : UnequippedAnimSet);
+	return SetToQuery.SelectBestLayer(CosmeticTags);
+}
