@@ -15,6 +15,8 @@
 #include "Input/LyraCloneInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "PlayerMappableInputConfig.h"
+#include "AbilitySystem/LyraCloneAbilitySystemComponent.h"
+
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneHeroComponent)
 
@@ -146,6 +148,15 @@ void ULyraCloneHeroComponent::HandleChangeInitState(UGameFrameworkComponentManag
 
 		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		const ULyraClonePawnData* PawnData = nullptr;
+		if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>();
+
+			// DataInitialized 단계까지 오면, Pawn이 Controller에 Possess되어 준비된 상태이다:
+			// - InitAbilityActorInfo 호출로 AvatarActor 재설정이 필요하다
+			PawnExtComp->InitializeAbilitySystem(LyraClonePS->GetLyraCloneAbilitySystemComponent(), LyraClonePS);
+		}
+
 		if (ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
 		{
 			PawnData = PawnExtComp->GetPawnData<ULyraClonePawnData>();

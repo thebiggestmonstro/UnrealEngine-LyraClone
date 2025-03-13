@@ -8,6 +8,8 @@
 
 class ULyraCloneExperienceDefinition;
 class ULyraClonePawnData;
+class ULyraCloneAbilitySystemComponent;
+
 
 /**
  * 
@@ -18,6 +20,8 @@ class LYRACLONE_API ALyraClonePlayerState : public APlayerState
 	GENERATED_BODY()
 	
 public:
+	ALyraClonePlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
 	/**
 	 * AActor's interface
 	 */
@@ -30,7 +34,11 @@ public:
 	const T* GetPawnData() const { return Cast<T>(PawnData); }
 	void OnExperienceLoaded(const ULyraCloneExperienceDefinition* CurrentExperience);
 	void SetPawnData(const ULyraClonePawnData* InPawnData);
+	ULyraCloneAbilitySystemComponent* GetLyraCloneAbilitySystemComponent() const { return AbilitySystemComponent; }
 
 	UPROPERTY()
 	TObjectPtr<const ULyraClonePawnData> PawnData;
+
+	UPROPERTY(VisibleAnywhere, Category = "LyraClone|PlayerState")
+	TObjectPtr<ULyraCloneAbilitySystemComponent> AbilitySystemComponent;
 };

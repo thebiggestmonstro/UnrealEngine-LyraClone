@@ -8,6 +8,8 @@
 #include "Input/LyraCloneInputConfig.h"
 #include "LyraClonePawnData.generated.h"
 
+class ULyraCloneAbilitySet;
+
 /**
  * 
  */
@@ -30,4 +32,8 @@ public:
 	/** input configuration used by player controlled pawns to create input mappings and bind input actions */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|InputConfig")
 	TObjectPtr<ULyraCloneInputConfig> InputConfig;
+
+	/** 해당 Pawn의 Ability System에 허용할 AbilitySet */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hak|Abilities")
+	TArray<TObjectPtr<ULyraCloneAbilitySet>> AbilitySets;
 };

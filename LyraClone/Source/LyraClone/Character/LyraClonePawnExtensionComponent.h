@@ -7,6 +7,7 @@
 #include "LyraClonePawnExtensionComponent.generated.h"
 
 class ULyraClonePawnData;
+class ULyraCloneAbilitySystemComponent;
 
 /**
  * 초기화 전반을 조정하는 컴포넌트
@@ -31,6 +32,10 @@ public:
 	void SetPawnData(const ULyraClonePawnData* InPawnData);	
 	void SetupPlayerInputComponent();
 
+	/** AbilitySystemComponent의 AvatorActor 대상 초기화/해제 호출 */
+	void InitializeAbilitySystem(ULyraCloneAbilitySystemComponent* InASC, AActor* InOwnerActor);
+	void UninitializeAbilitySystem();
+
 	/**
 	 * UPawnComponent interfaces
 	 */
@@ -51,4 +56,8 @@ public:
 	*/
 	UPROPERTY(EditInstanceOnly, Category = "LyraClone|Pawn")
 	TObjectPtr<const ULyraClonePawnData> PawnData;
+
+	/** AbilitySystemComponent 캐싱 */
+	UPROPERTY()
+	TObjectPtr<ULyraCloneAbilitySystemComponent> AbilitySystemComponent;
 };
