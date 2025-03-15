@@ -35,6 +35,7 @@ public:
 	/** AbilitySystemComponent의 AvatorActor 대상 초기화/해제 호출 */
 	void InitializeAbilitySystem(ULyraCloneAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	void UninitializeAbilitySystem();
+	ULyraCloneAbilitySystemComponent* GetLyraCloneAbilitySystemComponent() const { return AbilitySystemComponent; }
 
 	/**
 	 * UPawnComponent interfaces

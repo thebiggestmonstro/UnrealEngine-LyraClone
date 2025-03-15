@@ -4,6 +4,8 @@
 #include "Equipment/LyraCloneEquipmentManagerComponent.h"
 #include "Equipment/LyraCloneEquipmentInstance.h"
 #include "Equipment/LyraCloneEquipmentDefinition.h"
+#include "AbilitySystemGlobals.h"
+#include "AbilitySystem/LyraCloneAbilitySystemComponent.h"
 
 ULyraCloneEquipmentInstance* FLyraCloneEquipmentList::AddEntry(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition)
 {
@@ -27,6 +29,15 @@ ULyraCloneEquipmentInstance* FLyraCloneEquipmentList::AddEntry(TSubclassOf<ULyra
 	NewEntry.Instance = NewObject<ULyraCloneEquipmentInstance>(OwnerComponent->GetOwner(), InstanceType);
 	Result = NewEntry.Instance;
 
+	ULyraCloneAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	check(ASC);
+	{
+		for (const TObjectPtr<ULyraCloneAbilitySet> AbilitySet : EquipmentCDO->AbilitySetsToGrant)
+		{
+			AbilitySet->GiveToAbilitySystem(ASC, &NewEntry.GrantedHandles, Result);
+		}
+	}
+
 	// ActorsToSpawn을 통해, Actor들을 인스턴스화 해주자
 	// - 어디에? EquipmentInstance에!
 	Result->SpawnEquipmentActors(EquipmentCDO->ActorsToSpawn);
@@ -42,11 +53,30 @@ void FLyraCloneEquipmentList::RemoveEntry(ULyraCloneEquipmentInstance* Instance)
 		FLyraCloneAppliedEquipmentEntry& Entry = *EntryIt;
 		if (Entry.Instance == Instance)
 		{
+			ULyraCloneAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+			check(ASC);
+			{
+				// TakeFromAbilitySystem은 GiveToAbilitySystem 반대 역활로, ActivatableAbilities에서 제거한다
+				Entry.GrantedHandles.TakeFromAbilitySystem(ASC);
+			}
+
 			// Actor 제거 작업 및 iterator를 통한 안전하게 Array에서 제거 진행
 			Instance->DestroyEquipmentActors();
 			EntryIt.RemoveCurrent();
 		}
 	}
+}
+
+ULyraCloneAbilitySystemComponent* FLyraCloneEquipmentList::GetAbilitySystemComponent() const
+{
+	check(OwnerComponent);
+	AActor* OwningActor = OwnerComponent->GetOwner();
+
+	// GetAbilitySystemComponentFromActor를 잠시 확인해보자:
+	// - EquipmentManagerComponent는 AHakCharacter를 Owner로 가지고 있다
+	// - 해당 함수는 IAbilitySystemInterface를 통해 AbilitySystemComponent를 반환한다
+	// - 우리는 HakCharacter에 IAbilitySystemInterface를 상속받을 필요가 있다
+	return Cast<ULyraCloneAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }
 
 ULyraCloneEquipmentManagerComponent::ULyraCloneEquipmentManagerComponent(const FObjectInitializer& ObjectInitializer)

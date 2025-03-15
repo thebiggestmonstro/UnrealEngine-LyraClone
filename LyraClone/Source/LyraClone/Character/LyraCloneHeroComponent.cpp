@@ -266,6 +266,13 @@ void ULyraCloneHeroComponent::InitializePlayerInput(UInputComponent* PlayerInput
 				{
 					// InputTag_Move와 InputTag_Look_Mouse에 대해 각각 Input_Move()와 Input_LookMouse() 멤버 함수에 바인딩시킨다:
 					// - 바인딩한 이후, Input 이벤트에 따라 멤버 함수가 트리거된다
+					{
+						TArray<uint32> BindHandles;
+						LyraCloneIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, BindHandles);
+					}
+
+					// InputTag_Move와 InputTag_Look_Mouse에 대해 각각 Input_Move()와 Input_LookMouse() 멤버 함수에 바인딩시킨다:
+					// - 바인딩한 이후, Input 이벤트에 따라 멤버 함수가 트리거된다
 					LyraCloneIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
 					LyraCloneIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_LookMouse, false);
 				}
@@ -335,5 +342,33 @@ void ULyraCloneHeroComponent::Input_LookMouse(const FInputActionValue& InputActi
 		// Y에는 Pitch 값!
 		double AimInversionValue = -Value.Y;
 		Pawn->AddControllerPitchInput(AimInversionValue);
+	}
+}
+
+void ULyraCloneHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (ULyraCloneAbilitySystemComponent* LyraCloneASC = PawnExtComp->GetLyraCloneAbilitySystemComponent())
+			{
+				LyraCloneASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void ULyraCloneHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const ULyraClonePawnExtensionComponent* PawnExtComp = ULyraClonePawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (ULyraCloneAbilitySystemComponent* LyraCloneASC = PawnExtComp->GetLyraCloneAbilitySystemComponent())
+			{
+				LyraCloneASC->AbilityInputTagReleased(InputTag);
+			}
+		}
 	}
 }

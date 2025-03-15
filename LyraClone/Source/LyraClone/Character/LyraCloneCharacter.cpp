@@ -20,6 +20,12 @@ ALyraCloneCharacter::ALyraCloneCharacter()
 	}
 }
 
+UAbilitySystemComponent* ALyraCloneCharacter::GetAbilitySystemComponent() const
+{
+	// 앞서, 우리는 PawnExtensionComponent에 AbilitySystemComponent를 캐싱하였다
+	return PawnExtComponent->GetLyraCloneAbilitySystemComponent();
+}
+
 // Called when the game starts or when spawned
 void ALyraCloneCharacter::BeginPlay()
 {

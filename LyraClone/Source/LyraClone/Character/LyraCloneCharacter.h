@@ -4,19 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "ModularCharacter.h"
+#include "AbilitySystemInterface.h"
 #include "LyraCloneCharacter.generated.h"
 
 class ULyraClonePawnExtensionComponent;
 class ULyraCloneCameraComponent;
 
 UCLASS()
-class LYRACLONE_API ALyraCloneCharacter : public AModularCharacter
+class LYRACLONE_API ALyraCloneCharacter : public AModularCharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 	public:
 	// Sets default values for this character's properties
 	ALyraCloneCharacter();
+
+	/**
+	 * IAbilitySystemInterface
+	 */
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	// Called when the game starts or when spawned

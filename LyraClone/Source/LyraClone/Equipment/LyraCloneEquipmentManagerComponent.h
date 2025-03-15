@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/PawnComponent.h"
+#include "AbilitySystem/LyraCloneAbilitySet.h"
 #include "LyraCloneEquipmentManagerComponent.generated.h"
 
 /** forward declarations */
@@ -22,6 +23,10 @@ struct FLyraCloneAppliedEquipmentEntry
 	/** EquipmentDefinition을 통해 생성된 인스턴스 */
 	UPROPERTY()
 	TObjectPtr<ULyraCloneEquipmentInstance> Instance = nullptr;
+
+	/** 무기에 할당된 허용가능한 GameplayAbility */
+	UPROPERTY()
+	FLyraCloneAbilitySet_GrantedHandles GrantedHandles;
 };
 
 /**
@@ -39,6 +44,8 @@ struct FLyraCloneEquipmentList
 
 	ULyraCloneEquipmentInstance* AddEntry(TSubclassOf<ULyraCloneEquipmentDefinition> EquipmentDefinition);
 	void RemoveEntry(ULyraCloneEquipmentInstance* Instance);
+
+	ULyraCloneAbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	/** 장착물에 대한 관리 리스트 */
 	UPROPERTY()

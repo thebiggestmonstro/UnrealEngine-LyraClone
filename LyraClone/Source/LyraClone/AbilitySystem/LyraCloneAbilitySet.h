@@ -39,6 +39,7 @@ struct FLyraCloneAbilitySet_GrantedHandles
 	GENERATED_BODY()
 
 	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle);
+	void TakeFromAbilitySystem(ULyraCloneAbilitySystemComponent* LyraCloneASC);
 
 protected:
 	/** 허용된 GameplayAbilitySpecHandle(int32) */

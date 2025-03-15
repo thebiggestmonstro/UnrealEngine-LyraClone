@@ -6,6 +6,9 @@
 #include "ModularPlayerController.h"
 #include "LyraClonePlayerController.generated.h"
 
+class ULyraCloneAbilitySystemComponent;
+class ALyraClonePlayerState;
+
 /**
  * 
  */
@@ -16,4 +19,15 @@ class LYRACLONE_API ALyraClonePlayerController : public AModularPlayerController
 	
 public:
 	ALyraClonePlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/**
+	* PlayerController interface
+	*/
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
+	/**
+	 * member methods
+	 */
+	ALyraClonePlayerState* GetLyraClonePlayerState() const;
+	ULyraCloneAbilitySystemComponent* GetLyraCloneAbilitySystemComponent() const;
 };

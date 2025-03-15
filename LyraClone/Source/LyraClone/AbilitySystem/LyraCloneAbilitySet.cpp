@@ -19,6 +19,24 @@ void FLyraCloneAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAb
 	}
 }
 
+void FLyraCloneAbilitySet_GrantedHandles::TakeFromAbilitySystem(ULyraCloneAbilitySystemComponent* LyraCloneASC)
+{
+	if (!LyraCloneASC->IsOwnerActorAuthoritative())
+	{
+		return;
+	}
+
+	for (const FGameplayAbilitySpecHandle& Handle : AbilitySpecHandles)
+	{
+		if (Handle.IsValid())
+		{
+			// ActivatableAbilities에서 제거한다:
+			// - ClearAbility() 함수를 잠깐 보고 오자
+			LyraCloneASC->ClearAbility(Handle);
+		}
+	}
+}
+
 void ULyraCloneAbilitySet::GiveToAbilitySystem(ULyraCloneAbilitySystemComponent* LyraCloneASC, FLyraCloneAbilitySet_GrantedHandles* OutGrantedHandles, UObject* SourceObject)
 {
 	check(LyraCloneASC);

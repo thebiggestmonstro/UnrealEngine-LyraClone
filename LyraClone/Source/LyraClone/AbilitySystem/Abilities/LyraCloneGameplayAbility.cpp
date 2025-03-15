@@ -6,5 +6,5 @@
 ULyraCloneGameplayAbility::ULyraCloneGameplayAbility(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	ActivationPolicy = ELyraCloneAbilityActivationPolicy::OnInputTriggered;
 }

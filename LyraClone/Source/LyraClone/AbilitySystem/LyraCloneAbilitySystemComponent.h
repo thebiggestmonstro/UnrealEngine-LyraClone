@@ -16,4 +16,16 @@ class LYRACLONE_API ULyraCloneAbilitySystemComponent : public UAbilitySystemComp
 	
 public:
 	ULyraCloneAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	/**
+	 * member methods
+	 */
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
+
+	/** Ability Input 처리할 Pending Queue */
+	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
+	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
+	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 };
