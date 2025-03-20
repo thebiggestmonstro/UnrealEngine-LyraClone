@@ -94,7 +94,7 @@ FTransform ULyraCloneGameplayAbility_RangedWeapon::GetTargetingTransform(APawn* 
 	const FVector WeaponLoc = GetWeaponTargetingSourceLocation();
 	FVector FinalCamLoc = FocalLoc + (((WeaponLoc - FocalLoc) | AimDir) * AimDir);
 
-#if 1
+#if 0
 	{
 		// WeaponLoc (사실상 ActorLoc)
 		DrawDebugPoint(GetWorld(), WeaponLoc, 10.0f, FColor::Red, false, 60.0f);

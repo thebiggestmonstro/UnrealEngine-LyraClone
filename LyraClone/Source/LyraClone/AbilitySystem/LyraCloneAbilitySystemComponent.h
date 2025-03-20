@@ -18,6 +18,11 @@ public:
 	ULyraCloneAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	/**
+	 * AbilitySystemComponent's interface
+	 */
+	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
+
+	/**
 	 * member methods
 	 */
 	void AbilityInputTagPressed(const FGameplayTag& InputTag);

@@ -73,9 +73,9 @@ ULyraCloneAbilitySystemComponent* FLyraCloneEquipmentList::GetAbilitySystemCompo
 	AActor* OwningActor = OwnerComponent->GetOwner();
 
 	// GetAbilitySystemComponentFromActor를 잠시 확인해보자:
-	// - EquipmentManagerComponent는 AHakCharacter를 Owner로 가지고 있다
+	// - EquipmentManagerComponent는 ALyraCloneCharacter를 Owner로 가지고 있다
 	// - 해당 함수는 IAbilitySystemInterface를 통해 AbilitySystemComponent를 반환한다
-	// - 우리는 HakCharacter에 IAbilitySystemInterface를 상속받을 필요가 있다
+	// - 우리는 LyraCloneCharacter에 IAbilitySystemInterface를 상속받을 필요가 있다
 	return Cast<ULyraCloneAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor));
 }
 
@@ -111,4 +111,24 @@ void ULyraCloneEquipmentManagerComponent::UnequipItem(ULyraCloneEquipmentInstanc
 		// - 제거하는 과정을 통해 추가되었던 Actor Instance를 제거를 진행한다
 		EquipmentList.RemoveEntry(ItemInstance);
 	}
+}
+
+TArray<ULyraCloneEquipmentInstance*> ULyraCloneEquipmentManagerComponent::GetEquipmentInstancesOfType(TSubclassOf<ULyraCloneEquipmentInstance> InstanceType) const
+{
+	TArray<ULyraCloneEquipmentInstance*> Results;
+
+	// EquipmentList를 순회하며
+	for (const FLyraCloneAppliedEquipmentEntry& Entry : EquipmentList.Entries)
+	{
+		if (ULyraCloneEquipmentInstance* Instance = Entry.Instance)
+		{
+			// InstanceType에 맞는 Class이면 Results에 추가하여 반환
+			// - 우리의 경우, LyraCloneRangedWeaponInstance가 될거임
+			if (Instance->IsA(InstanceType))
+			{
+				Results.Add(Instance);
+			}
+		}
+	}
+	return Results;
 }
