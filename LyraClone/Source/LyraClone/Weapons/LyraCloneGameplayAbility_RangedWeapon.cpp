@@ -5,6 +5,12 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
 #include "LyraCloneRangedWeaponInstance.h"
+#include "DrawDebugHelpers.h"
+#include "CollisionQueryParams.h"
+#include "Engine/World.h"
+#include "Physics/LyraCloneCollisionChannels.h"
+#include "AbilitySystem/LyraCloneGameplayAbilityTargetData_SingleTarget.h"
+#include "AbilitySystemComponent.h"
 
 ULyraCloneGameplayAbility_RangedWeapon::ULyraCloneGameplayAbility_RangedWeapon(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -190,6 +196,185 @@ void ULyraCloneGameplayAbility_RangedWeapon::TraceBulletsInCartridge(const FRang
 		OutHits.Add(Impact);
 	}
 }
+
+int32 FindFirstPawnHitResult(const TArray<FHitResult>& HitResults)
+{
+	for (int32 Idx = 0; Idx < HitResults.Num(); ++Idx)
+	{
+		const FHitResult& CurHitResult = HitResults[Idx];
+		if (CurHitResult.HitObjectHandle.DoesRepresentClass(APawn::StaticClass()))
+		{
+			return Idx;
+		}
+		else
+		{
+			AActor* HitActor = CurHitResult.HitObjectHandle.FetchActor();
+
+			// 한단계 AttachParent에 Actor가 Pawn이라면?
+			// - 보통 복수개 단계로 AttachParent를 하지 않으므로, AttachParent 대상이 APawn이라고 생각할 수도 있겠다
+			if ((HitActor != nullptr) && (HitActor->GetAttachParentActor() != nullptr) && (Cast<APawn>(HitActor->GetAttachParentActor()) != nullptr))
+			{
+				return Idx;
+			}
+		}
+	}
+	return INDEX_NONE;
+}
+
+FHitResult ULyraCloneGameplayAbility_RangedWeapon::DoSingleBulletTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHits) const
+{
+	FHitResult Impact;
+
+	// 우선 SweepRadius 없이 한번 Trace 진행한다 (SweepTrace는 무겁기 때문)
+	// - FindFirstPawnHitResult()를 여러번 Trace 진행을 막기 위해, OutHits를 확인해서 APawn 충돌 정보있으면 더이상 Trace하지 않는다
+	if (FindFirstPawnHitResult(OutHits) == INDEX_NONE)
+	{
+		Impact = WeaponTrace(StartTrace, EndTrace, /*SweepRadius=*/0.0f, bIsSimulated, /*out*/ OutHits);
+	}
+
+	if (FindFirstPawnHitResult(OutHits) == INDEX_NONE)
+	{
+		// 만약 SweepRadius가 0보다 크면, 0.0일때 대비 충돌 가능성이 커지므로 한번 더 Trace 진행
+		if (SweepRadius > 0.0f)
+		{
+			// SweepHits에 Trace의 OutHits 정보를 저장
+			TArray<FHitResult> SweepHits;
+			Impact = WeaponTrace(StartTrace, EndTrace, SweepRadius, bIsSimulated, SweepHits);
+
+			// Sphere Trace로 진행한 결과인 SweepHits를 검색하여, Pawn이 있는가 검색
+			const int32 FirstPawnIdx = FindFirstPawnHitResult(SweepHits);
+			if (SweepHits.IsValidIndex(FirstPawnIdx))
+			{
+				// 만약 있다면, SweepHits를 FirstPawnIdx까지 순회하며, bBlockingHit와 기존 OutHits에 없을 경우 체크한다
+				bool bUseSweepHits = true;
+				for (int32 Idx = 0; Idx < FirstPawnIdx; ++Idx)
+				{
+					const FHitResult& CurHitResult = SweepHits[Idx];
+
+					auto Pred = [&CurHitResult](const FHitResult& Other)
+						{
+							return Other.HitObjectHandle == CurHitResult.HitObjectHandle;
+						};
+
+					// OutHits에 있다면... SweepHits를 OutHits로 업데이트 하지 않는다 (이미 충돌했던 정보가 있으니깐?) (early-out용)
+					// - OutHits에 bBlockingHits가 SweepHits로 있음을 알게되었음
+					if (CurHitResult.bBlockingHit && OutHits.ContainsByPredicate(Pred))
+					{
+						bUseSweepHits = false;
+						break;
+					}
+				}
+
+				// SweepHits
+				if (bUseSweepHits)
+				{
+					OutHits = SweepHits;
+				}
+			}
+		}
+	}
+
+	return Impact;
+}
+
+FHitResult ULyraCloneGameplayAbility_RangedWeapon::WeaponTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHitResults) const
+{
+	TArray<FHitResult> HitResults;
+
+	// Complex Geometry로 Trace를 진행하며, AvatarActor를 AttachParent를 가지는 오브젝트와의 충돌은 무시한다
+	FCollisionQueryParams TraceParams(SCENE_QUERY_STAT(WeaponTrace), /*bTraceComplex*/true, /*IgnoreActor=*/GetAvatarActorFromActorInfo());
+	TraceParams.bReturnPhysicalMaterial = true;
+
+	// AvatarActor에 부착된 Actors를 찾아 IgnoredActors에 추가한다
+	AddAdditionalTraceIgnoreActors(TraceParams);
+
+	// Weapon 관련 Collision Channel로 Trace 진행
+	const ECollisionChannel TraceChannel = DetermineTraceChannel(TraceParams, bIsSimulated);
+	if (SweepRadius > 0.0f)
+	{
+		GetWorld()->SweepMultiByChannel(HitResults, StartTrace, EndTrace, FQuat::Identity, TraceChannel, FCollisionShape::MakeSphere(SweepRadius), TraceParams);
+	}
+	else
+	{
+		GetWorld()->LineTraceMultiByChannel(HitResults, StartTrace, EndTrace, TraceChannel, TraceParams);
+	}
+
+	FHitResult Hit(ForceInit);
+	if (HitResults.Num() > 0)
+	{
+		// HitResults 중에 중복(같은) Object의 HitResult 정보를 제거
+		for (FHitResult& CurHitResult : HitResults)
+		{
+			auto Pred = [&CurHitResult](const FHitResult& Other)
+				{
+					return Other.HitObjectHandle == CurHitResult.HitObjectHandle;
+				};
+
+			if (!OutHitResults.ContainsByPredicate(Pred))
+			{
+				OutHitResults.Add(CurHitResult);
+			}
+		}
+
+		// Hit의 가장 마지막 값을 Impact로 저장
+		Hit = OutHitResults.Last();
+	}
+	else
+	{
+		// Hit의 결과 값을 기본 값으로 캐싱
+		Hit.TraceStart = StartTrace;
+		Hit.TraceEnd = EndTrace;
+	}
+
+	return Hit;
+}
+
+void ULyraCloneGameplayAbility_RangedWeapon::AddAdditionalTraceIgnoreActors(FCollisionQueryParams& TraceParams) const
+{
+	if (AActor* Avatar = GetAvatarActorFromActorInfo())
+	{
+		TArray<AActor*> AttachedActors;
+
+		// GetAttachedActors를 한번 보자:
+		// - 해당 함수는 Recursively하게 모든 Actors를 추출한다
+		// - 근데 왜 앞서 FindFirstPawnHitResult 이건 왜 한단계만 할까? ---
+		Avatar->GetAttachedActors(AttachedActors);
+
+		TraceParams.AddIgnoredActors(AttachedActors);
+	}
+}
+
+ECollisionChannel ULyraCloneGameplayAbility_RangedWeapon::DetermineTraceChannel(FCollisionQueryParams& TraceParams, bool bIsSimulated) const
+{
+	return LyraClone_TraceChannel_Weapon;
+}
+
+void ULyraCloneGameplayAbility_RangedWeapon::OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& InData, FGameplayTag ApplicationTag)
+{
+	UAbilitySystemComponent* MyAbilitySystemComponent = CurrentActorInfo->AbilitySystemComponent.Get();
+	check(MyAbilitySystemComponent);
+
+	if (const FGameplayAbilitySpec* AbilitySpec = MyAbilitySystemComponent->FindAbilitySpecFromHandle(CurrentSpecHandle))
+	{
+		// 현재 Stack에서 InData에서 지금 Local로 Ownership을 가져온다
+		FGameplayAbilityTargetDataHandle LocalTargetDataHandle(MoveTemp(const_cast<FGameplayAbilityTargetDataHandle&>(InData)));
+
+		// CommitAbility 호출로 GE(GameplayEffect)를 처리한다
+		// - 현재 아직 우리는 GE에 대해 처리를 진행하지 않을 것이다
+		if (CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo))
+		{
+			// OnRangeWeaponTargetDataReady BP 노드 호출한다:
+			// - 후일 여기서 우리는 GCN(GameplayCueNotify)를 처리할 것이다
+			OnRangeWeaponTargetDataReady(LocalTargetDataHandle);
+		}
+		else
+		{
+			// CommitAbility가 실패하였으면, EndAbility BP Node 호출한다
+			K2_EndAbility();
+		}
+	}
+}
+
 
 ULyraCloneRangedWeaponInstance* ULyraCloneGameplayAbility_RangedWeapon::GetWeaponInstance()
 {

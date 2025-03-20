@@ -49,6 +49,15 @@ public:
 	FVector GetWeaponTargetingSourceLocation() const;
 	void PerformLocalTargeting(TArray<FHitResult>& OutHits);
 	void TraceBulletsInCartridge(const FRangedWeaponFiringInput& InputData, TArray<FHitResult>& OutHits);
+	FHitResult DoSingleBulletTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHits) const;
+	FHitResult WeaponTrace(const FVector& StartTrace, const FVector& EndTrace, float SweepRadius, bool bIsSimulated, TArray<FHitResult>& OutHitResults) const;
+	void AddAdditionalTraceIgnoreActors(FCollisionQueryParams& TraceParams) const;
+	ECollisionChannel DetermineTraceChannel(FCollisionQueryParams& TraceParams, bool bIsSimulated) const;
+	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& InData, FGameplayTag ApplicationTag);
+
+	/** called when target data is ready */
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRangeWeaponTargetDataReady(const FGameplayAbilityTargetDataHandle& TargetData);
 
 	ULyraCloneRangedWeaponInstance* GetWeaponInstance();
 };
