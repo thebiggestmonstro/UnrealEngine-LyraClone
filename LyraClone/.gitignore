@@ -14,3 +14,5 @@ Build
 *.suo
 *.scodeproj
 *.xcworkspace
+
+/Content/Effects/Textures/Flipbooks
