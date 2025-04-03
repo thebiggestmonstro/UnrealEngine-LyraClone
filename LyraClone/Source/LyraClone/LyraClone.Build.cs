@@ -26,6 +26,12 @@ public class LyraClone : ModuleRules
             "EnhancedInput",
 			// Common User
 			"CommonUser",
+			// Common UI
+			"CommonUI",
+			// Common Game
+			"CommonGame",
+			// UMG
+			"UMG",
         });
 
 		PublicIncludePaths.AddRange(new string[] { "LyraClone" });
