@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "CommonGameInstance.h"
 #include "LyraCloneGameInstance.generated.h"
 
 /**
@@ -12,7 +13,7 @@
  * - Editor 상에서는 PIE로 실행 될때마다 하나씩 생성된다: 즉, 에디터에서는 복수개의 GameInstance가 존재 가능하다!
  */
 UCLASS()
-class LYRACLONE_API ULyraCloneGameInstance : public UGameInstance
+class LYRACLONE_API ULyraCloneGameInstance : public UCommonGameInstance
 {
 	GENERATED_BODY()
 	
