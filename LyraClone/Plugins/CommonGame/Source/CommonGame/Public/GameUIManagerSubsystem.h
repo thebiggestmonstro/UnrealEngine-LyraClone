@@ -8,6 +8,7 @@
 
 /** forward declarations */
 class UGameUIPolicy;
+class UCommonLocalPlayer;
 
 /**
  * 
@@ -17,6 +18,25 @@ class COMMONGAME_API UGameUIManagerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	
+public:
+	UGameUIManagerSubsystem();
+
+	void SwitchToPolicy(UGameUIPolicy* InPolicy);
+
+	/**
+	 * UGameInstanceSubsystem's interfaces
+	 */
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+
+	/**
+	 * UGameUIManagerSubsystem's interfaces
+	 */
+	virtual void NotifyPlayerAdded(UCommonLocalPlayer* LocalPlayer);
+	virtual void NotifyPlayerRemoved(UCommonLocalPlayer* LocalPlayer);
+	virtual void NotifyPlayerDestroyed(UCommonLocalPlayer* LocalPlayer);
+
 public:
 	UPROPERTY(Transient)
 	TObjectPtr<UGameUIPolicy> CurrentPolicy = nullptr;
