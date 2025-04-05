@@ -14,4 +14,6 @@ class LYRACLONE_API ULyraCloneUIManagerSubsystem : public UGameUIManagerSubsyste
 {
 	GENERATED_BODY()
 	
+public:
+	ULyraCloneUIManagerSubsystem();
 };

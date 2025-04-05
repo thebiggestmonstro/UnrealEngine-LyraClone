@@ -20,7 +20,7 @@ void UGameUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	// CurrentPolicy가 설정되어 있지 않고, DefaultUIPolicyClass가 제대로 설정되어 있을 경우 (우리는 HakUIPolicy겠지?)
+	// CurrentPolicy가 설정되어 있지 않고, DefaultUIPolicyClass가 제대로 설정되어 있을 경우 (우리는 LyraCloneUIPolicy겠지?)
 	if (!CurrentPolicy && !DefaultUIPolicyClass.IsNull())
 	{
 		// UIPolicyClass는 BP에셋이기에, 로딩해야 함

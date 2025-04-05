@@ -3,3 +3,7 @@
 
 #include "UI/LyraCloneUIManagerSubsystem.h"
 
+ULyraCloneUIManagerSubsystem::ULyraCloneUIManagerSubsystem()
+{
+
+}
