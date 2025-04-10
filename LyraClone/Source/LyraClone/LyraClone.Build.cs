@@ -32,6 +32,8 @@ public class LyraClone : ModuleRules
 			"CommonGame",
 			// UMG
 			"UMG",
+			// UIExtension
+            "UIExtension",
         });
 
 		PublicIncludePaths.AddRange(new string[] { "LyraClone" });

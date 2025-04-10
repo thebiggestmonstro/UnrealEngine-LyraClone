@@ -4,7 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameplayTagContainer.h"
 #include "CommonUIExtension.generated.h"
+
+class UCommonActivatableWidget;
+class ULocalPlayer;
 
 /**
  * 
@@ -14,4 +18,8 @@ class COMMONGAME_API UCommonUIExtension : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
+public:
+	UCommonUIExtension() {}
+
+	static UCommonActivatableWidget* PushContentToLayer_ForPlayer(const ULocalPlayer* LocalPlayer, FGameplayTag LayerName, TSubclassOf<UCommonActivatableWidget> WidgetClass);
 };
