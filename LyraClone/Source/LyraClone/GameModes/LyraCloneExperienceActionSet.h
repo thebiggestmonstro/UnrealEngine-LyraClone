@@ -19,6 +19,10 @@ class LYRACLONE_API ULyraCloneExperienceActionSet : public UPrimaryDataAsset
 public:
 	ULyraCloneExperienceActionSet();
 
+#if WITH_EDITORONLY_DATA
+	virtual void UpdateAssetBundleData() override;
+#endif
+
 	/**
 	 * member variables
 	 */

@@ -65,7 +65,6 @@ void ULyraCloneExperienceManagerComponent::StartExperienceLoad()
 
 	ULyraCloneAssetManager& AssetManager = ULyraCloneAssetManager::Get();
 
-	TSet<FPrimaryAssetId> BundleAssetList;
 
 	// 이미 앞서, ServerSetCurrentExperience에서 우리는 ExperienceId를 넘겨주었는데, 여기서 CDO를 활용하여, GetPrimaryAssetId를 로딩할 대상으로 넣는다!
 	// - 왜 이렇게 하는걸까?
@@ -75,7 +74,20 @@ void ULyraCloneExperienceManagerComponent::StartExperienceLoad()
 	//   2. CDO를 가져와서, GetPrimaryAssetId를 호출한 이유
 
 	// 우리는 앞서 이미 CDO로 로딩하여, CDO를 사용하지 않고 CDO를 사용하여 로딩할 에셋을 지정하여, BundleAssetList에 추가해준다!
+	TSet<FPrimaryAssetId> BundleAssetList;
 	BundleAssetList.Add(CurrentExperience->GetPrimaryAssetId());
+
+	// ExperienceActionSet의 순회하며, BundleAssetList로 추가하자:
+	for (const TObjectPtr<ULyraCloneExperienceActionSet>& ActionSet : CurrentExperience->ActionSets)
+	{
+		if (ActionSet)
+		{
+			// 앞서, 우리가 생성한 HAS_Shooter_SharedHUD가 추가되겠다 (물론 추가적인 HAS_Shooter_XXX)도 추가될거다
+			// - BundleAssetList는 Bundle로 등록할 Root의 PrimaryDataAsset를 추가하는 과정이다
+			//   (->??? 무슨말인가 싶을건데 ChangeBundleStateForPrimaryAssets)을 살펴보면서 이해하자
+			BundleAssetList.Add(ActionSet->GetPrimaryAssetId());
+		}
+	}
 
 	// load assets associated with the experience
 	// 아래는 우리가 후일 GameFeature를 사용하여, Experience에 바인딩된 GameFeature Plugin을 로딩할 Bundle 이름을 추가한다:

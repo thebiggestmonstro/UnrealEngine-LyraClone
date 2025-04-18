@@ -13,6 +13,7 @@
 #include "LyraCloneLogChannels.h"
 #include "Character/LyraClonePawnData.h"
 #include "Character/LyraClonePawnExtensionComponent.h"
+#include "UI/LyraCloneHUD.h"
 
 ALyraCloneGameMode::ALyraCloneGameMode()
 {
@@ -20,6 +21,7 @@ ALyraCloneGameMode::ALyraCloneGameMode()
 	PlayerControllerClass = ALyraClonePlayerController::StaticClass();
 	PlayerStateClass = ALyraClonePlayerState::StaticClass();
 	DefaultPawnClass = ALyraCloneCharacter::StaticClass();
+	HUDClass = ALyraCloneHUD::StaticClass();
 }
 
 void ALyraCloneGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
