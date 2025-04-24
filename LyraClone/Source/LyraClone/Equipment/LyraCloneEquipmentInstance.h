@@ -32,6 +32,9 @@ public:
 	TArray<AActor*> GetSpawnedActors() const { return SpawnedActors; }
 
 	UFUNCTION(BlueprintPure, Category = Equipment)
+	UObject* GetInstigator() const { return Instigator; }
+
+	UFUNCTION(BlueprintPure, Category = Equipment)
 	APawn* GetPawn() const;
 
 	/**

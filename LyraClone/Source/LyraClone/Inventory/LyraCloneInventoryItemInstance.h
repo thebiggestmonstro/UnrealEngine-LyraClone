@@ -12,7 +12,7 @@ class ULyraCloneInventoryItemDefinition;
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class LYRACLONE_API ULyraCloneInventoryItemInstance : public UObject
 {
 	GENERATED_BODY()
