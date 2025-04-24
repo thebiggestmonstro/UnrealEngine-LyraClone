@@ -8,6 +8,9 @@
 #include "Components/DynamicEntryBoxBase.h"
 #include "UIExtensionPointWidget.generated.h"
 
+/** forward declarations */
+class UCommonLocalPlayer;
+
 /**
  * 
  */
@@ -17,6 +20,18 @@ class UIEXTENSION_API UUIExtensionPointWidget : public UDynamicEntryBoxBase
 	GENERATED_BODY()
 	
 public:
+	UUIExtensionPointWidget(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	void ResetExtensionPoint();
+	void RegisterExtensionPoint();
+	void RegisterExtensionPointForPlayerState(UCommonLocalPlayer* LocalPlayer, APlayerState* PlayerState);
+	void OnAddOrRemoveExtension(EUIExtensionAction Action, const FUIExtensionRequest& Request);
+
+	/**
+	* UWidget's interfaces
+	*/
+	virtual TSharedRef<SWidget> RebuildWidget() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI Extension")
 	FGameplayTag ExtensionPointTag;
 
