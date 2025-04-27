@@ -15,7 +15,8 @@
 				"EnhancedInput",
 				"GameplayAbilities",
 				"CommonGame",
-				"CommonUI"
+				"CommonUI",
+				"UMG"
 			]
 		}
 	],

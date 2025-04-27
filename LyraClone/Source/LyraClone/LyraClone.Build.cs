@@ -34,6 +34,9 @@ public class LyraClone : ModuleRules
 			"UMG",
 			// UIExtension
             "UIExtension",
+			// Slate
+            "Slate",
+            "SlateCore",
         });
 
 		PublicIncludePaths.AddRange(new string[] { "LyraClone" });
