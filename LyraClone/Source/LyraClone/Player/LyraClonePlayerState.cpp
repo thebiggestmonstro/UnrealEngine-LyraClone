@@ -7,6 +7,8 @@
 #include "Character/LyraClonePawnData.h"
 #include "GameModes/LyraCloneGameMode.h"
 #include "AbilitySystem/LyraCloneAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/LyraCloneHealthSet.h"
+#include "AbilitySystem/Attributes/LyraCloneCombatSet.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "AbilitySystem/LyraCloneAbilitySet.h"
 
@@ -14,6 +16,9 @@ ALyraClonePlayerState::ALyraClonePlayerState(const FObjectInitializer& ObjectIni
 	: Super(ObjectInitializer)
 {
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<ULyraCloneAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
+
+	CreateDefaultSubobject<ULyraCloneHealthSet>(TEXT("HealthSet"));
+	CreateDefaultSubobject<ULyraCloneCombatSet>(TEXT("CombatSet"));
 }
 
 void ALyraClonePlayerState::PostInitializeComponents()

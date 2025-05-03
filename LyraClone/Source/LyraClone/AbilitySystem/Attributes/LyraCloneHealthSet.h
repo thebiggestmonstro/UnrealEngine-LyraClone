@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Attributes/LyraCloneAttributeSet.h"
+#include "AbilitySystemComponent.h"
 #include "LyraCloneHealthSet.generated.h"
 
 /**
@@ -24,6 +25,21 @@ public:
 	ATTRIBUTE_ACCESSORS(ULyraCloneHealthSet, Health);
 	ATTRIBUTE_ACCESSORS(ULyraCloneHealthSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(ULyraCloneHealthSet, Healing);
+
+	/**
+	* Attribute의 값을 ClampAttribute()를 활용하여, 값의 범위를 유지시켜주기 위해
+	* PreAttributeBaseChange와 PreAttributeChange 오버라이드
+	*/
+	void ClampAttribute(const FGameplayAttribute& Attribute, float& NewValue) const;
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+	/**
+	* GameplayEffect가 HealthSet의 Attribute를 수정하기 전에 불리는 콜백함수이다:
+	* - 이는 AttributeSet의 주석에도 잘 나와있듯이, Healing이 업데이트되면, Health를 Healing을 적용하여 업데이트 가능하다
+	*/
+	virtual bool PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	/** 현재 체력 */
 	UPROPERTY(BlueprintReadOnly, Category = "Hak|Health")
