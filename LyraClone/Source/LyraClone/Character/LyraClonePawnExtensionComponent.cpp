@@ -63,6 +63,9 @@ void ULyraClonePawnExtensionComponent::InitializeAbilitySystem(ULyraCloneAbility
 	// ASC를 업데이트하고, InitAbilityActorInfo를 Pawn과 같이 호출하여, AvatarActor를 Pawn으로 업데이트 해준다
 	AbilitySystemComponent = InASC;
 	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
+
+	// OnAbilitySystemInitialized에 바인딩된 Delegate 호출
+	OnAbilitySystemInitialized.Broadcast();
 }
 
 void ULyraClonePawnExtensionComponent::UninitializeAbilitySystem()
@@ -70,6 +73,12 @@ void ULyraClonePawnExtensionComponent::UninitializeAbilitySystem()
 	if (!AbilitySystemComponent)
 	{
 		return;
+	}
+
+	if (AbilitySystemComponent->GetAvatarActor() == GetOwner())
+	{
+		// OnAbilitySystemUninitialized에 바인딩된 Delegate 호출
+		OnAbilitySystemUninitialized.Broadcast();
 	}
 
 	AbilitySystemComponent = nullptr;
@@ -225,4 +234,27 @@ void ULyraClonePawnExtensionComponent::CheckDefaultInitialization()
 	//   - InitState에 대한 변화는 Linear(선형적)임을!... -> 나중에 Diagram으로 정리하면서 보자
 	//     - 업데이트가 멈추면 누군가 시작해줘야 함을 의미! (chaining)
 	ContinueInitStateChain(StateChain);
+}
+
+void ULyraClonePawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate)
+{
+	// OnAbilitySystemInitialized에 UObject가 바인딩되어 있지 않으면 추가 (Uniqueness)
+	if (!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
+	{
+		OnAbilitySystemInitialized.Add(Delegate);
+	}
+
+	// 이미 ASC가 설정되었으면, Delegate에 추가하는게 아닌 바로 호출 (이미 초기화되어 있으니깐!)
+	if (AbilitySystemComponent)
+	{
+		Delegate.Execute();
+	}
+}
+
+void ULyraClonePawnExtensionComponent::OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate)
+{
+	if (!OnAbilitySystemUninitialized.IsBoundToObject(Delegate.GetUObject()))
+	{
+		OnAbilitySystemUninitialized.Add(Delegate);
+	}
 }

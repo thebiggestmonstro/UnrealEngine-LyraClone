@@ -37,6 +37,10 @@ public:
 	void UninitializeAbilitySystem();
 	ULyraCloneAbilitySystemComponent* GetLyraCloneAbilitySystemComponent() const { return AbilitySystemComponent; }
 
+	/** OnAbilitySystem[Initialized|Uninitialized] Delegate에 추가: */
+	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
+	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate);
+
 	/**
 	 * UPawnComponent interfaces
 	 */
@@ -61,4 +65,8 @@ public:
 	/** AbilitySystemComponent 캐싱 */
 	UPROPERTY()
 	TObjectPtr<ULyraCloneAbilitySystemComponent> AbilitySystemComponent;
+
+	/** ASC Init과 Uninit의 Delegate 추가 */
+	FSimpleMulticastDelegate OnAbilitySystemInitialized;
+	FSimpleMulticastDelegate OnAbilitySystemUninitialized;
 };

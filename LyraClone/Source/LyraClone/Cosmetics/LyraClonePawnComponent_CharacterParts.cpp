@@ -120,6 +120,7 @@ FGameplayTagContainer FLyraCloneCharacterPartList::CollectCombinedTags() const
 ULyraClonePawnComponent_CharacterParts::ULyraClonePawnComponent_CharacterParts(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 , CharacterPartList(this)
 {
+
 }
 
 USkeletalMeshComponent* ULyraClonePawnComponent_CharacterParts::GetParentMeshComponent() const
