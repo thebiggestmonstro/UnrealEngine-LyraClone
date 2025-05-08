@@ -16,7 +16,7 @@ class LYRACLONE_API ALyraCloneCharacter : public AModularCharacter, public IAbil
 {
 	GENERATED_BODY()
 
-	public:
+public:
 	// Sets default values for this character's properties
 	ALyraCloneCharacter();
 

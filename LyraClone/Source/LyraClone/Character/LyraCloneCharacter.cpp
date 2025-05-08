@@ -13,7 +13,6 @@ ALyraCloneCharacter::ALyraCloneCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	
 	// PawnExtComponent 생성
-	// PawnExtComponent 생성
 	PawnExtComponent = CreateDefaultSubobject<ULyraClonePawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	{
 		PawnExtComponent->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
