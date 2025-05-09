@@ -18,6 +18,15 @@ ULyraCloneInventoryItemInstance* FLyraCloneInventoryList::AddEntry(TSubclassOf<U
 	NewEntry.Instance = NewObject<ULyraCloneInventoryItemInstance>(OwningActor);
 	NewEntry.Instance->ItemDef = ItemDef;
 
+	// iterating fragments and call callback to OnInstanceCreated()
+	for (const ULyraCloneInventoryItemFragment* Fragment : GetDefault<ULyraCloneInventoryItemDefinition>(ItemDef)->Fragments)
+	{
+		if (Fragment)
+		{
+			Fragment->OnInstanceCreated(NewEntry.Instance);
+		}
+	}
+
 	Result = NewEntry.Instance;
 	return Result;
 }

@@ -7,6 +7,7 @@
 #include "LyraCloneItemDefinition.generated.h"
 
 class ULyraCloneInventoryItemFragment;
+class ULyraCloneInventoryItemInstance;
 
 /**
  * Inventory에 대한 Fragment은 확 와닫지 않을 수 있다:
@@ -22,7 +23,8 @@ class ULyraCloneInventoryItemFragment : public UObject
 	GENERATED_BODY()
 	
 public:
-
+	/** interface to call when inventory item instance is added to UHakInventoryManagerComponent's InventoryList */
+	virtual void OnInstanceCreated(ULyraCloneInventoryItemInstance* Instance) const {}
 };
 
 /**
