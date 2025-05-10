@@ -17,6 +17,9 @@ enum class ELyraCloneAbilityActivationPolicy : uint8
 	OnSpawn,
 };
 
+/** forward declarations */
+class ULyraCloneAbilityCost;
+
 /**
  * 
  */
@@ -28,7 +31,17 @@ class LYRACLONE_API ULyraCloneGameplayAbility : public UGameplayAbility
 public:
 	ULyraCloneGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/**
+	 * UGameplayAbility interfaces
+	 */
+	virtual bool CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
+	virtual void ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+
 	/** 언제 GA가 활성화될지 정책 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|AbilityActivation")
 	ELyraCloneAbilityActivationPolicy ActivationPolicy;
+
+	/** ability costs to apply LyraCloneGameplayAbility separately */
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "LyraClone|Costs")
+	TArray<TObjectPtr<ULyraCloneAbilityCost>> AdditionalCosts;
 };

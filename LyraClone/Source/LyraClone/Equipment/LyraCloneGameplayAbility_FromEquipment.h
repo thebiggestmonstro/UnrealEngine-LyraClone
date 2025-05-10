@@ -7,6 +7,7 @@
 #include "LyraCloneGameplayAbility_FromEquipment.generated.h"
 
 class ULyraCloneEquipmentInstance;
+class ULyraCloneInventoryItemInstance;
 
 /**
  * 
@@ -18,4 +19,5 @@ class LYRACLONE_API ULyraCloneGameplayAbility_FromEquipment : public ULyraCloneG
 	
 public:
 	ULyraCloneEquipmentInstance* GetAssociatedEquipment() const;
+	ULyraCloneInventoryItemInstance* GetAssociatedItem() const;
 };
