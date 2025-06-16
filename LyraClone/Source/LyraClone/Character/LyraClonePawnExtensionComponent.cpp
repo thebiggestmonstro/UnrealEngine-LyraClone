@@ -34,6 +34,9 @@ void ULyraClonePawnExtensionComponent::SetPawnData(const ULyraClonePawnData* InP
 
 	// PawnData 업데이트
 	PawnData = InPawnData;
+
+	// PawnData가 업데이트 되었으므로, InitState에서 Spawned -> DataAvailable 전환
+	CheckDefaultInitialization();
 }
 
 void ULyraClonePawnExtensionComponent::SetupPlayerInputComponent()

@@ -8,7 +8,7 @@
 ULyraCloneCameraComponent::ULyraCloneCameraComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
+	CameraModeStack = nullptr;
 }
 
 void ULyraCloneCameraComponent::OnRegister()
