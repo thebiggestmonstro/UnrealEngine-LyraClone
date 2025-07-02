@@ -34,6 +34,6 @@ public:
 	TObjectPtr<ULyraCloneInputConfig> InputConfig;
 
 	/** 해당 Pawn의 Ability System에 허용할 AbilitySet */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hak|Abilities")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LyraClone|Abilities")
 	TArray<TObjectPtr<ULyraCloneAbilitySet>> AbilitySets;
 };
