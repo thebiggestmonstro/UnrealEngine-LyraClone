@@ -4,14 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "CommonLocalPlayer.h"
-#include "LyraLocalPlayer.generated.h"
+#include "LyraCloneLocalPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class LYRACLONE_API ULyraLocalPlayer : public UCommonLocalPlayer
+class LYRACLONE_API ULyraCloneLocalPlayer : public UCommonLocalPlayer
 {
 	GENERATED_BODY()
 	
+public:
+	ULyraCloneLocalPlayer();
 };
