@@ -92,7 +92,13 @@ void UGameUIPolicy::NotifyPlayerAdded(UCommonLocalPlayer* LocalPlayer)
 
 void UGameUIPolicy::NotifyPlayerRemoved(UCommonLocalPlayer* LocalPlayer)
 {
-	
+	if (FRootViewportLayoutInfo* LayoutInfo = RootViewportLayouts.FindByKey(LocalPlayer))
+	{
+		RemoveLayoutFromViewport(LocalPlayer, LayoutInfo->RootLayout);
+
+		// 비활성화 확인할 수 용도로 끈다
+		LayoutInfo->bAddedToViewport = false;
+	}
 }
 
 void UGameUIPolicy::NotifyPlayerDestroyed(UCommonLocalPlayer* LocalPlayer)
