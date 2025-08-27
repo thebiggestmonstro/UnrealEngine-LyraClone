@@ -59,6 +59,7 @@ public:
 		TArray<FUIExtensionHandle> ExtensionHandles;
 	};
 
+	void Reset(FPerContextData& ActiveData);
 	void AddWidgets(AActor* Actor, FPerContextData& ActiveData);
 	void RemoveWidgets(AActor* Actor, FPerContextData& ActiveData);
 

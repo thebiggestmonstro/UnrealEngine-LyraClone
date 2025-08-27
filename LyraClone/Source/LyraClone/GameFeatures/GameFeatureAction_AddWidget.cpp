@@ -54,9 +54,27 @@ void UGameFeatureAction_AddWidget::RemoveWidgets(AActor* Actor, FPerContextData&
 	ActiveData.ExtensionHandles.Reset();
 }
 
+void UGameFeatureAction_AddWidget::Reset(FPerContextData& ActiveData)
+{
+	ActiveData.ComponentRequests.Empty();
+	ActiveData.LayoutsAdded.Empty();
+
+	for (FUIExtensionHandle& Handle : ActiveData.ExtensionHandles)
+	{
+		Handle.Unregister();
+	}
+	ActiveData.ExtensionHandles.Reset();
+}
+
 void UGameFeatureAction_AddWidget::OnGameFeatureDeactivating(FGameFeatureDeactivatingContext& Context)
 {
 	Super::OnGameFeatureDeactivating(Context);
+
+	FPerContextData* ActiveData = ContextData.Find(Context);
+	if (ensure(ActiveData))
+	{
+		Reset(*ActiveData);
+	}
 }
 
 void UGameFeatureAction_AddWidget::AddToWorld(const FWorldContext& WorldContext, const FGameFeatureStateChangeContext& ChangeContext)
