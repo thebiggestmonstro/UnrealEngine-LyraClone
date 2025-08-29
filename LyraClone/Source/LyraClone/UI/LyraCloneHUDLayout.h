@@ -7,11 +7,13 @@
 #include "LyraCloneHUDLayout.generated.h"
 
 /**
- * 
+ * PrimaryGameLayout의 Layer에 연동할 HUD Layout (CommonActivatableWidget)
  */
-UCLASS()
+UCLASS(Abstract, BlueprintType, Blueprintable, meta = (DisplayName = "LyraClone HUD Layout", Category = "LyraClone|HUD"))
 class LYRACLONE_API ULyraCloneHUDLayout : public ULyraCloneActivatableWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	ULyraCloneHUDLayout(const FObjectInitializer& ObjectInitializer);
 };
