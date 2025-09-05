@@ -4,6 +4,7 @@
 #include "AbilitySystem/Executions/LyraCloneHealExecution.h"
 #include "AbilitySystem/Attributes/LyraCloneCombatSet.h"
 #include "AbilitySystem/Attributes/LyraCloneHealthSet.h"
+#include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneHealExecution)
 
 /**
  * 해당 Struct를 사용하여, FGameplayEffectAttributeCaptureDefinition 인스턴스화하여 전달한다

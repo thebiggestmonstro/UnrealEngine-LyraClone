@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Attributes/LyraCloneHealthSet.h"
 #include "GameplayEffectExtension.h"
+#include UE_INLINE_GENERATED_CPP_BY_NAME(LyraCloneHealthSet)
+
 
 ULyraCloneHealthSet::ULyraCloneHealthSet() 
 	: Super(), Health(50), MaxHealth(100)

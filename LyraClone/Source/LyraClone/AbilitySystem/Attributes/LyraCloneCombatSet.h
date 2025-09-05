@@ -25,6 +25,6 @@ public:
 	 * - Healing의 단위를 의미한다
 	 * - e.g. 5.0f라면, Period당 5씩 Healing된다는 의미
 	 */
-	UPROPERTY(BlueprintReadOnly, Category = "Hak|Combat")
+	UPROPERTY(BlueprintReadOnly, Category = "LyraClone|Combat")
 	FGameplayAttributeData BaseHeal;
 };
