@@ -36,17 +36,17 @@ public:
 	void HandleHealthChanged(const FOnAttributeChangeData& ChangeData);
 
 	/** Actor(보통 ACharacter/APawn)의 HealthComponent를 반환 */
-	UFUNCTION(BlueprintPure, Category = "Hak|Health")
+	UFUNCTION(BlueprintPure, Category = "LyraClone|Health")
 	static ULyraCloneHealthComponent* FindHealthComponent(const AActor* Actor);
 
 	/** 아래의 UFUNCTION은 HealthSet의 Attribute에 접근하기 위한 BP Accessor 함수들 */
-	UFUNCTION(BlueprintCallable, Category = "Hak|Health")
+	UFUNCTION(BlueprintCallable, Category = "LyraClone|Health")
 	float GetHealth() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Hak|Health")
+	UFUNCTION(BlueprintCallable, Category = "LyraClone|Health")
 	float GetMaxHealth() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Hak|Health")
+	UFUNCTION(BlueprintCallable, Category = "LyraClone|Health")
 	float GetHealthNormalized() const;
 
 	/** HealthSet을 접근하기 위한 AbilitySystemComponent */

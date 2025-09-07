@@ -23,7 +23,7 @@ class ULyraCloneInventoryItemFragment : public UObject
 	GENERATED_BODY()
 	
 public:
-	/** interface to call when inventory item instance is added to UHakInventoryManagerComponent's InventoryList */
+	/** interface to call when inventory item instance is added to ULyraCloneInventoryManagerComponent's InventoryList */
 	virtual void OnInstanceCreated(ULyraCloneInventoryItemInstance* Instance) const {}
 };
 
